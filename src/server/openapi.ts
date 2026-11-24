@@ -114,6 +114,8 @@ export function buildOpenApiSpec() {
     },
     paths: {
       '/v1/index': { get: { summary: 'Estate dataset summary & counts' } },
+      '/v1/getting-started': { get: { summary: 'Getting started guide (JSON or .md)' } },
+      '/v1/guide': { get: { summary: 'API & tool reference guide (JSON or .md)' } },
       '/v1/search': { get: { summary: 'FTS5 search across CVEs, repos, packages, assets, incidents' } },
       '/v1/repositories': { get: { summary: 'List GitHub & Azure DevOps repositories' } },
       '/v1/repositories/{platform}/{owner}/{name}': { get: { summary: 'Repository security context & SBOM verdicts' } },

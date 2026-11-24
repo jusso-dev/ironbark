@@ -21,6 +21,17 @@ export function OverviewPage({
           <code>.csproj</code> / <code>packages.lock.json</code>, and Defender MDVM software inventories—and
           correlate every package and CVE across 10 vulnerability and live-incident databases.
         </p>
+        <div className="ib-form-row" style={{ marginTop: 14, marginBottom: 0 }}>
+          <button type="button" className="primary" onClick={() => navigate('/getting-started')}>
+            Getting Started Guide →
+          </button>
+          <button type="button" onClick={() => navigate('/stack')}>
+            Scan an SBOM
+          </button>
+          <button type="button" onClick={() => navigate('/docs')}>
+            Documentation
+          </button>
+        </div>
         {data.hasSyntheticDemo && (
           <div className="ib-demo-banner">
             <strong>Synthetic Demonstration Estate Loaded:</strong> Showing Contoso Cloud &amp; Federal demo

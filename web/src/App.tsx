@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { fetchApi } from './api';
-import { ConnectorsPage, DocsPage } from './pages/ConnectorsAndDocsPages';
+import { ConnectorsPage } from './pages/ConnectorsAndDocsPages';
+import { DocsPage } from './pages/DocsPage';
+import { GettingStartedPage } from './pages/GettingStartedPage';
 import { OverviewPage } from './pages/OverviewPage';
 import { AssetDetailPage, AssetsPage, RepoDetailPage, ReposPage } from './pages/ReposAndAssetsPages';
 import { StackPage } from './pages/StackPage';
@@ -9,6 +11,7 @@ import type { IndexPayload } from './types';
 
 function twinPaths(pathname: string): { json: string; md: string } {
   if (pathname === '/' || pathname === '') return { json: '/v1/index', md: '/v1/index.md' };
+  if (pathname.startsWith('/getting-started')) return { json: '/v1/getting-started', md: '/v1/getting-started.md' };
   if (pathname.startsWith('/repos')) return { json: '/v1/repositories', md: '/v1/repositories.md' };
   if (pathname.startsWith('/r/')) {
     const rest = pathname.slice(3);
@@ -120,12 +123,14 @@ export function App() {
       return <AssetDetailPage id={decodeURIComponent(path.slice('/assets/'.length))} navigate={navigate} />;
     }
     if (path === '/connectors') return <ConnectorsPage />;
-    if (path === '/docs') return <DocsPage />;
+    if (path === '/getting-started') return <GettingStartedPage navigate={navigate} />;
+    if (path === '/docs') return <DocsPage navigate={navigate} />;
     return <OverviewPage data={indexData} navigate={navigate} />;
   };
 
   const navItems: Array<[string, string]> = [
     ['/', 'Overview'],
+    ['/getting-started', 'Getting Started'],
     ['/stack', 'Scan SBOM'],
     ['/repos', 'Repositories'],
     ['/vulnerabilities', 'CVEs'],
@@ -133,7 +138,7 @@ export function App() {
     ['/packages', 'Packages'],
     ['/assets', 'Defender Assets'],
     ['/connectors', 'Connectors'],
-    ['/docs', 'Docs & MCP'],
+    ['/docs', 'Docs'],
   ];
 
   const hitHref = (entityType: string, entityId: string) => {
@@ -159,7 +164,21 @@ export function App() {
               navigate('/');
             }}
           >
-            <span className="ib-brand-mark">Ib</span>
+            <svg width="26" height="26" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+              <rect x="2" y="2" width="60" height="60" rx="14" fill="#14161a" stroke="#2c3038" strokeWidth="1.5" />
+              <path
+                d="M32 10 L50 17.5 V31.5 C50 42.2 42.3 50.6 32 54.5 C21.7 50.6 14 42.2 14 31.5 V17.5 L32 10 Z"
+                fill="#14161a"
+                stroke="#ea580c"
+                strokeWidth="2.4"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M32 16.5 C37.2 21.8 39.2 28.8 37.5 36.2 C36.1 41.2 33.8 44.6 32 47 C30.2 44.6 27.9 41.2 26.5 36.2 C24.8 28.8 26.8 21.8 32 16.5 Z"
+                fill="#f6f6f3"
+              />
+              <path d="M32 20.5 V45.5" stroke="#ea580c" strokeWidth="2.2" strokeLinecap="round" />
+            </svg>
             <span>Ironbark</span>
           </a>
 

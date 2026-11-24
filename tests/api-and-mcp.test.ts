@@ -25,6 +25,19 @@ describe('REST API, .md Twins, Wildcard Packages, SARIF, Feeds & MCP', () => {
     expect(idxMd.headers.get('content-type')).toContain('text/markdown');
     expect(await idxMd.text()).toContain('Ironbark');
 
+    const gsJson = await app.request('/v1/getting-started');
+    expect(gsJson.status).toBe(200);
+    const gsPayload = (await gsJson.json()) as { title: string; steps: unknown[] };
+    expect(gsPayload.steps.length).toBe(5);
+
+    const gsMd = await app.request('/v1/getting-started.md');
+    expect(gsMd.status).toBe(200);
+    expect(await gsMd.text()).toContain('Getting Started with Ironbark');
+
+    const guideMd = await app.request('/v1/guide.md');
+    expect(guideMd.status).toBe(200);
+    expect(await guideMd.text()).toContain('10 Correlated Intelligence Databases');
+
     const cveMd = await app.request('/v1/cves/CVE-2024-43485.md');
     expect(cveMd.status).toBe(200);
     const cveText = await cveMd.text();

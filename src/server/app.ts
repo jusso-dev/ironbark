@@ -13,6 +13,7 @@ import { renderEscalationFeed } from './feeds.js';
 import {
   formatAssetMarkdown,
   formatCveMarkdown,
+  formatGettingStartedMarkdown,
   formatGuideMarkdown,
   formatIncidentsMarkdown,
   formatIndexMarkdown,
@@ -95,6 +96,25 @@ export function createApp(store: IronbarkStore, opts: { fetchFn?: FetchLike; web
     return c.json({ guide: formatGuideMarkdown(), endpoints: buildOpenApiSpec().paths });
   });
   app.get('/v1/guide.md', (c) => c.text(formatGuideMarkdown(), 200, { 'Content-Type': 'text/markdown; charset=utf-8' }));
+
+  app.get('/v1/getting-started', (c) => {
+    const md = formatGettingStartedMarkdown();
+    if (wantsMarkdown(c)) return c.text(md, 200, { 'Content-Type': 'text/markdown; charset=utf-8' });
+    return c.json({
+      title: 'Getting Started with Ironbark',
+      markdown: md,
+      steps: [
+        { step: 1, title: 'Local or Docker Quickstart', command: 'pnpm install && pnpm run build && pnpm start' },
+        { step: 2, title: 'Scan First SBOM', command: 'node ./bin/ironbark.mjs scan examples/sboms/contoso-dotnet8-ms-sbom.spdx.json --live --format sarif' },
+        { step: 3, title: 'Sync Public Threat Feeds', command: 'node ./bin/ironbark.mjs sync pwnwatch && node ./bin/ironbark.mjs sync kev' },
+        { step: 4, title: 'Configure GitHub, Defender & Azure DevOps Connectors', envExample: '.env.example' },
+        { step: 5, title: 'Connect MCP Agents', httpEndpoint: '/mcp', stdioCommand: 'ironbark mcp' },
+      ],
+    });
+  });
+  app.get('/v1/getting-started.md', (c) =>
+    c.text(formatGettingStartedMarkdown(), 200, { 'Content-Type': 'text/markdown; charset=utf-8' }),
+  );
 
   app.get('/v1/openapi.json', (c) => c.json(buildOpenApiSpec()));
   app.get('/v1/tools', (c) => c.json(buildToolDefinitions()));

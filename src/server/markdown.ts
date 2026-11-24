@@ -19,6 +19,7 @@ Every REST GET route supports JSON (default) or Markdown (append \`.md\` or send
 ## Primary Endpoints
 
 - Estate Overview: \`GET /v1/index.md\`
+- Getting Started Guide: \`GET /v1/getting-started.md\`
 - Repositories (GitHub + Azure DevOps): \`GET /v1/repositories.md\`, \`GET /v1/repositories/{platform}/{owner}/{name}.md\`
 - Defender Runtime Assets: \`GET /v1/assets.md\`, \`GET /v1/assets/{id}.md\`
 - Correlated CVEs (10 databases): \`GET /v1/cves.md\`, \`GET /v1/cves/{cveId}.md?live=true\`
@@ -26,6 +27,57 @@ Every REST GET route supports JSON (default) or Markdown (append \`.md\` or send
 - Packages (supports scoped npm/Go paths): \`GET /v1/packages/{ecosystem}/{name}.md\`
 - Check SBOM / Stack: \`GET /v1/stack.md?p=nuget/System.Text.Json@8.0.4&live=true\`, \`POST /v1/stack\`, \`POST /v1/sboms\`
 - Escalation Feeds: \`GET /v1/feed\` (RSS), \`?format=atom\`, \`?format=json\`
+`;
+}
+
+export function formatGettingStartedMarkdown(): string {
+  return `# Getting Started with Ironbark
+
+> Quickstart for scanning Microsoft \`sbom-tool\`, GitHub Dependency Graph, \`.NET\`, and Defender inventories across 10 vulnerability and live-incident databases.
+
+## 1. Local Quickstart (60 Seconds)
+
+\`\`\`sh
+git clone https://github.com/jusso-dev/ironbark.git
+cd ironbark
+pnpm install
+pnpm run build
+pnpm start
+\`\`\`
+
+Open \`http://127.0.0.1:8788\`. Pass \`--no-seed\` (\`node --no-warnings dist/server/cli.js serve --no-seed\`) to start with an empty SQLite database instead of the synthetic Contoso Cloud demo estate.
+
+## 2. Scan Your First SBOM
+
+\`\`\`sh
+# Live 10-source evaluation on the bundled Microsoft sbom-tool (.NET 8) SPDX 2.2 manifest
+node ./bin/ironbark.mjs scan examples/sboms/contoso-dotnet8-ms-sbom.spdx.json --live --format md
+
+# Export SARIF v2.1.0 for GitHub Code Scanning / Microsoft Defender for DevOps
+node ./bin/ironbark.mjs scan examples/sboms/contoso-dotnet8-ms-sbom.spdx.json --live --format sarif > ironbark.sarif
+\`\`\`
+
+## 3. Sync Public Feeds & Correlate CVEs (No Keys Required)
+
+\`\`\`sh
+node ./bin/ironbark.mjs cve CVE-2024-43485 --live --format md
+node ./bin/ironbark.mjs sync pwnwatch
+node ./bin/ironbark.mjs sync cvenow
+node ./bin/ironbark.mjs sync kev
+node ./bin/ironbark.mjs sync msrc
+\`\`\`
+
+## 4. Connect GitHub, Defender for Cloud, Defender XDR & Azure DevOps
+
+- **GitHub**: \`GITHUB_TOKEN\` (fine-grained PAT with \`Contents: Read\`, \`Dependabot alerts: Read\`, \`Code scanning alerts: Read\`, \`Secret scanning alerts: Read\`)
+- **Defender for Cloud (ARM / ARG)**: \`AZURE_TENANT_ID\`, \`AZURE_CLIENT_ID\`, \`AZURE_CLIENT_SECRET\`, \`AZURE_SUBSCRIPTION_ID\` (Entra role: \`Security Reader\`)
+- **Defender XDR / MDVM**: \`DEFENDER_TENANT_ID\`, \`DEFENDER_CLIENT_ID\`, \`DEFENDER_CLIENT_SECRET\` (WindowsDefenderATP perms: \`Machine.Read.All\`, \`Software.Read.All\`, \`Vulnerability.Read.All\`)
+- **Azure DevOps**: \`AZDO_ORG_URL\`, \`AZDO_PROJECT\`, \`AZDO_PAT\` (\`Build: Read\`, \`Code: Read\`)
+
+## 5. Connect Agents via MCP
+
+- **Streamable HTTP**: \`POST http://127.0.0.1:8788/mcp\`
+- **Stdio**: \`node --no-warnings /ABS/PATH/TO/ironbark/bin/ironbark.mjs mcp\`
 `;
 }
 
