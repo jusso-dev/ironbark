@@ -1,0 +1,27 @@
+services:
+  ironbark:
+    build: .
+    ports:
+      - '8788:8788'
+    environment:
+      HOST: '0.0.0.0'
+      PORT: '8788'
+      IRONBARK_DB_PATH: /data/ironbark.db
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      NVD_API_KEY: ${NVD_API_KEY:-}
+      CVENOW_API_KEY: ${CVENOW_API_KEY:-}
+      AZURE_TENANT_ID: ${AZURE_TENANT_ID:-}
+      AZURE_CLIENT_ID: ${AZURE_CLIENT_ID:-}
+      AZURE_CLIENT_SECRET: ${AZURE_CLIENT_SECRET:-}
+      AZURE_SUBSCRIPTION_ID: ${AZURE_SUBSCRIPTION_ID:-}
+      DEFENDER_TENANT_ID: ${DEFENDER_TENANT_ID:-}
+      DEFENDER_CLIENT_ID: ${DEFENDER_CLIENT_ID:-}
+      DEFENDER_CLIENT_SECRET: ${DEFENDER_CLIENT_SECRET:-}
+      AZDO_ORG_URL: ${AZDO_ORG_URL:-}
+      AZDO_PROJECT: ${AZDO_PROJECT:-}
+      AZDO_PAT: ${AZDO_PAT:-}
+    volumes:
+      - ironbark_data:/data
+
+volumes:
+  ironbark_data:

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ironbark · Microsoft &amp; GitHub SBOM Security Context</title>
+    <meta
+      name="description"
+      content="Microsoft Defender, Azure DevOps, and GitHub Security SBOM intelligence across 10 CVE and live-incident databases."
+    />
+    <meta name="theme-color" content="#F6F6F3" />
+    <script>
+      (function () {
+        var s = localStorage.getItem('ironbark.theme');
+        if (!s) s = matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light';
+        document.documentElement.dataset.theme = s;
+        document.documentElement.style.colorScheme = s;
+        var m = document.querySelector('meta[name="theme-color"]');
+        if (m) m.setAttribute('content', s === 'dark' ? '#121314' : '#F6F6F3');
+      })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Libre+Franklin:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

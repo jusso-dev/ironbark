@@ -1,0 +1,41 @@
+{
+  "name": "ironbark",
+  "version": "0.1.0",
+  "description": "Microsoft Defender & GitHub Security SBOM intelligence platform: ingest DevOps & endpoint SBOMs and correlate exposure across 10 CVE & incident databases.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "bin": {
+    "ironbark": "./bin/ironbark.mjs"
+  },
+  "scripts": {
+    "dev:api": "NODE_NO_WARNINGS=1 tsx watch src/cli.ts serve --port 8788",
+    "dev:web": "vite --config vite.config.ts",
+    "build:server": "tsc -p tsconfig.server.json",
+    "build:web": "vite build --config vite.config.ts",
+    "build": "pnpm run build:server && pnpm run build:web",
+    "typecheck": "tsc -p tsconfig.server.json --noEmit && tsc -p tsconfig.web.json --noEmit",
+    "test": "NODE_NO_WARNINGS=1 vitest run",
+    "ironbark": "NODE_NO_WARNINGS=1 tsx src/cli.ts",
+    "start": "NODE_NO_WARNINGS=1 node dist/server/cli.js serve"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.19.6",
+    "hono": "^4.10.6",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.29",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.5.2",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "vite": "^6.3.5",
+    "vitest": "^3.2.4"
+  }
+}

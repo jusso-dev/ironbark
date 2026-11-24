@@ -1,0 +1,36 @@
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - task: UseDotNet@2
+    inputs:
+      packageType: 'sdk'
+      version: '8.0.x'
+
+  - script: dotnet restore
+    displayName: 'Restore .NET dependencies'
+
+  - task: ManifestGeneratorTask@0
+    displayName: 'Generate Microsoft SBOM (SPDX 2.2)'
+    inputs:
+      BuildDropPath: '$(Build.ArtifactStagingDirectory)'
+      PackageName: '$(Build.Repository.Name)'
+      PackageVersion: '$(Build.BuildNumber)'
+
+  - task: MicrosoftSecurityDevOps@1
+    displayName: 'Run Microsoft Security DevOps'
+
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '22.x'
+
+  - script: |
+      npx --yes ironbark scan "$(Build.ArtifactStagingDirectory)/_manifest/spdx_2.2/manifest.spdx.json" --live --format sarif > "$(Build.ArtifactStagingDirectory)/ironbark-sbom.sarif"
+    displayName: 'Correlate SBOM across MSRC, cve.now, pwn.watch, OSV, NVD & KEV'
+
+  - publish: '$(Build.ArtifactStagingDirectory)/ironbark-sbom.sarif'
+    artifact: CodeAnalysisLogs
+    displayName: 'Publish SARIF for Defender for Cloud DevOps'

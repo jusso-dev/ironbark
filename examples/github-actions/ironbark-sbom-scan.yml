@@ -1,0 +1,41 @@
+name: Ironbark SBOM & Multi-CVE Security Context
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: '0 6 * * *'
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  sbom-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate Microsoft SBOM (SPDX 2.2)
+        uses: microsoft/sbom-tool-action@v1
+        with:
+          BuildDropPath: '.'
+          BuildComponentPath: '.'
+          PackageName: ${{ github.repository }}
+          PackageVersion: ${{ github.sha }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Scan SBOM across 10 CVE & Incident Databases
+        run: |
+          npx --yes ironbark scan _manifest/spdx_2.2/manifest.spdx.json --live --format sarif > ironbark.sarif
+
+      - name: Upload SARIF to GitHub Security / Defender for DevOps
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ironbark.sarif
+          category: ironbark-sbom
