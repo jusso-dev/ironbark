@@ -22,7 +22,7 @@
     "start": "NODE_NO_WARNINGS=1 node dist/server/cli.js serve"
   },
   "dependencies": {
-    "@hono/node-server": "^1.19.6",
+    "@hono/node-server": "^2.1.6",
     "hono": "^4.10.6",
     "zod": "^3.25.76"
   },
